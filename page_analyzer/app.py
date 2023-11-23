@@ -20,7 +20,7 @@ def index():
     
 @app.post('/urls')
 def get_add_url():
-    url = request.form.get('url_input')
+    url = request.form.get('url')
     errors = get_validate(url)
     if errors:
         return render_template('index.html', errors = errors), 422
@@ -30,6 +30,7 @@ def get_add_url():
     with conn.cursor() as curs:
         curs.execute('INSERT INTO urls (name, created_at) VALUES (%s, %s)',
                      (normalize_url, current_date))
+        curs.connection.commit() 
         curs.execute('SELECT id FROM urls WHERE name = %s', (normalize_url))
         dict_curs = curs.fetchone()
     url_id = dict_curs['id']
