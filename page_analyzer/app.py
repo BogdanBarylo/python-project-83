@@ -50,8 +50,8 @@ def get_url(id):
 @app.route('/urls')
 def get_all_urls():
     with conn.cursor() as curs:
-        curs.execute('SELECT * FROM urls;')
-        dict_curs = curs.fetchone()
+        curs.execute('SELECT * FROM urls')
+        dict_curs = curs.fetchall()
     return render_template('all_urls.html', urls = dict_curs)
 
 
