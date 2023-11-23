@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+  <h1>Сайт: {{ name }}</h1>
+  <table data-test="url">
+    <tr>
+      <td>ID</td>
+      <td>{{id}}</td>
+    </tr>   
+    <tr>
+      <td>Имя</td>
+      <td>{{ name }}</td>
+    </tr>
+    <tr>
+      <td>Дата создания</td>
+      <td>{{ date }}</td>
+    </tr>
+  </table>
+  <h1>Проверки</h1>
+  <input type="submit" value="Запустить проверку">
+  <table data-test="checks">
+    <tr>
+      <td>ID</td>
+      <td>Код ответа</td>
+      <td>h1</td>
+      <td>title</td>
+      <td>description</td>
+      <td>Дата создания</td>
+    </tr>
+    <tr>
+      <td>ID</td>
+      <td>Код ответа</td>
+      <td>h1</td>
+      <td>title</td>
+      <td>description</td>
+      <td>Дата создания</td>
+    </tr>
+  </table>   
+</body>
+{% endblock %}
