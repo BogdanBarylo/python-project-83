@@ -1,40 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-<body>
-  <h1>Сайт: {{ name }}</h1>
-  <table data-test="url">
-    <tr>
-      <td>ID</td>
-      <td>{{id}}</td>
-    </tr>   
-    <tr>
-      <td>Имя</td>
-      <td>{{ name }}</td>
-    </tr>
-    <tr>
-      <td>Дата создания</td>
-      <td>{{ date }}</td>
-    </tr>
-  </table>
-  <h1>Проверки</h1>
-  <input type="submit" value="Запустить проверку">
-  <table data-test="checks">
-    <tr>
-      <td>ID</td>
-      <td>Код ответа</td>
-      <td>h1</td>
-      <td>title</td>
-      <td>description</td>
-      <td>Дата создания</td>
-    </tr>
-    <tr>
-      <td>ID</td>
-      <td>Код ответа</td>
-      <td>h1</td>
-      <td>title</td>
-      <td>description</td>
-      <td>Дата создания</td>
-    </tr>
-  </table>   
-</body>
+<div class="container-lg mt-3">
+  <form>
+    <h1>Сайт: {{ name }}</h1>
+    <div class="table-responsive">
+      <table class="table table-bordered" data-test="url">
+        <tr>
+          <td>ID</td>
+          <td>{{ id }}</td>
+        </tr>   
+        <tr>
+          <td>Имя</td>
+          <td>{{ name }}</td>
+        </tr>
+        <tr>
+          <td>Дата создания</td>
+          <td>{{ created_at }}</td>
+        </tr>
+      </table>
+    </div>
+  </form>
+  <form>
+    <h2 class = "mt-5 mb-2">Проверки</h2>
+    <input type="submit" class="btn btn-primary mt-2" value="Запустить проверку">
+    <table class="table table-bordered mt-2" data-test="checks">
+      <tr>
+        <th>ID</th>
+        <th>Код ответа</th>
+        <th>h1</th>
+        <th>title</th>
+        <th>description</th>
+        <th>Дата создания</th>
+      </tr>
+      <tr>
+        <td>ID</td>
+        <td>Код ответа</td>
+        <td>h1</td>
+        <td>title</td>
+        <td>description</td>
+        <td>Дата создания</td>
+      </tr>
+    </table>
+  </form>
+</div>
 {% endblock %}

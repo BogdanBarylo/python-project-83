@@ -1,0 +1,12 @@
+---
+services:
+  db:
+    image: postgres:latest
+    ports:
+    - 5432:5432
+    environment:
+      POSTGRES_DB: db_analyzer
+      POSTGRES_USER: bogdan
+      POSTGRES_PASSWORD: pass
+    volumes:
+      - ./path/to/your/sql/scripts:/docker-entrypoint-initdb.d
