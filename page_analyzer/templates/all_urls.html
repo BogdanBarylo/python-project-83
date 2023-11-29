@@ -1,26 +1,32 @@
 {% extends "base.html" %}
 {% block content %}
+<main class="flex-grow-1">
 <div class="container-lg mt-3">
 <h1>Сайты</h1>
 <table class="table table-bordered" data-test="urls">
-  <tr>
-    <th>ID</th>
-    <th>Имя</th>
-    <th>Последняя проверка</th>
-    <th>Код ответа</th>
-  </tr>
-  {% for url in urls[::-1] %} 
-  <tr>
-    <td>{{ url.get('id') }}</td>
-    <td>
-      <a href="{{ url_for('get_url', id = url.get('id')) }}">
-          {{ url.get('name') }}
-      </a>
-    </td>
-    <td>{{ url.get('created_at') }}</td>
-    <td>Код ответа</td>
-  </tr>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Имя</th>
+      <th>Последняя проверка</th>
+      <th>Код ответа</th>
+    </tr>
+  </thead>
+  {% for url in urls %} 
+  <tbody>
+    <tr>
+      <td>{{ url.get('id') }}</td>
+      <td>
+        <a href="{{ url_for('get_url', id = url.get('id')) }}">
+            {{ url.get('name') }}
+        </a>
+      </td>
+      <td>{{ url.get('last_checked_at') }}</td>
+      <td>Код ответа</td>
+    </tr>
+  </tbody>
   {% endfor %}
 </table>
 </div>
+</main>
 {% endblock %}
