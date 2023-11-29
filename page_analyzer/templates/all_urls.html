@@ -20,9 +20,9 @@
         <a href="{{ url_for('get_url', id = url.get('id')) }}">
             {{ url.get('name') }}
         </a>
-      </td>
-      <td>{{ url.get('last_checked_at') }}</td>
-      <td>Код ответа</td>
+      </td> 
+        <td>{% if url.get('last_checked_at') %}{{ url.get('last_checked_at') }}{% else %}&nbsp;{% endif %}</td>
+        <td>{% if url.get('status_code') %}{{ url.get('status_code') }}{% else %}&nbsp;{% endif %}</td>
     </tr>
   </tbody>
   {% endfor %}

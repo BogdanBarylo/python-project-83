@@ -6,6 +6,7 @@ from page_analyzer.normalize import get_normalized_url
 import psycopg2
 from psycopg2.extras import DictCursor
 from page_analyzer.time_normalize import get_normalized_time
+import requests
 
 
 load_dotenv()
@@ -15,14 +16,13 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
 
-@app.errorhandler(505)
-def get_error(error):
-    return render_template('505.html'), 505
-
-
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def get_error(error):
+    return render_template('500.html'), 500
 
 
 @app.route('/')
@@ -70,7 +70,7 @@ def get_url(id):
 @app.route('/urls')
 def get_all_urls():
     with conn.cursor(cursor_factory=DictCursor) as curs:
-        curs.execute('SELECT urls.id, urls.name, urls.created_at, MAX(url_checks.created_at) AS last_checked_at FROM urls LEFT JOIN url_checks ON urls.id = url_checks.url_id GROUP BY urls.id, urls.name, urls.created_at ORDER BY urls.id DESC')
+        curs.execute('SELECT urls.id, urls.name, urls.created_at, url_checks.status_code, MAX(url_checks.created_at) AS last_checked_at FROM urls LEFT JOIN url_checks ON urls.id = url_checks.url_id GROUP BY urls.id, urls.name, urls.created_at, url_checks.status_code ORDER BY urls.id DESC')
         urls = curs.fetchall()
         for url in urls:
             url['last_checked_at'] = get_normalized_time(url['last_checked_at'])
@@ -82,19 +82,26 @@ def get_all_urls():
 def get_check_url(id):
     with conn.cursor(cursor_factory=DictCursor) as curs:
         curs.execute('SELECT name FROM urls WHERE id = %s', (id,))
-        url = curs.fetchone()
+        name = curs.fetchone()
+    responce = requests.get(name[0])
+    status_code = responce.status_code
+    if status_code == 500:
+        return redirect(url_for('get_error'))
+    elif status_code == 400:
+        return redirect(url_for('page_not_found'))
+
     with conn.cursor(cursor_factory=DictCursor) as curs:
-        curs.execute('INSERT INTO url_checks (url_id) VALUES (%s)', (id,))
+        curs.execute('INSERT INTO url_checks (url_id, status_code) VALUES (%s, %s)', (id, status_code))
         curs.connection.commit()
 
     with conn.cursor(cursor_factory=DictCursor) as curs:
-        curs.execute('SELECT id, created_at FROM url_checks WHERE url_id = %s', (id,))
+        curs.execute('SELECT id, created_at, status_code FROM url_checks WHERE url_id = %s', (id,))
         checks = curs.fetchall()
     if not checks:
         flash('Произошла ошибка при проверке', 'error')
         return redirect(url_for('get_url', id=id))
     
-    session['checks'] = [{'id': check['id'], 'created_at': get_normalized_time(check['created_at'])} for check in checks]
+    session['checks'] = [{'id': check['id'], 'created_at': get_normalized_time(check['created_at']), 'status_code': check['status_code']} for check in checks]
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_url', id=id))
 
