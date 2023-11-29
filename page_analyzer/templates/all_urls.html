@@ -21,8 +21,8 @@
             {{ url.get('name') }}
         </a>
       </td> 
-        <td>{% if url.get('last_checked_at') %}{{ url.get('last_checked_at') }}{% else %}&nbsp;{% endif %}</td>
-        <td>{% if url.get('status_code') %}{{ url.get('status_code') }}{% else %}&nbsp;{% endif %}</td>
+        <td>{% if url.get('last_checked_at') is not none %}{{ url.get('last_checked_at') }}{% endif %}</td>
+        <td>{% if url.get('status_code') is not none %}{{ url.get('status_code') }}{% endif %}</td>
     </tr>
   </tbody>
   {% endfor %}

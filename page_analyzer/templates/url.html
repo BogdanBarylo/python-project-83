@@ -39,9 +39,9 @@
         <tr>
           <td>{{ check['id'] }}</td>
           <td>{{ check['status_code'] }}</td>
-          <td>h1</td>
-          <td>title</td>
-          <td>description</td>
+          <td>{% if check['h1'] is not none %}{{ check['h1'] }}{% endif %}</td>
+          <td>{% if check['title'] is not none %}{{ check['title'] }}{% endif %}</td>
+          <td>{% if check['desc'] is not none %}{{ check['desc'] }}{% endif %}</td>
           <td>{{ check['created_at'] }}</td>
         </tr>
         {% endfor %}
