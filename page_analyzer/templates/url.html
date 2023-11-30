@@ -19,7 +19,7 @@
       </tr>
     </table>
   </div>
-  <form action="{{ url_for('get_check_url', id = id)}}" method="post">
+  <form action="{{ url_for('add_url_check', id = id)}}" method="post">
     <h2 class = "mt-5 mb-2">Проверки</h2>
     <input type="submit" class="btn btn-primary mt-2" value="Запустить проверку">
     <table class="table table-bordered mt-2" data-test="checks">
@@ -35,13 +35,13 @@
       </thead>
       {% if checks %}
       <tbody>
-        {% for check in checks[::-1] %}
+        {% for check in checks %}
         <tr>
           <td>{{ check['id'] }}</td>
           <td>{{ check['status_code'] }}</td>
-          <td>{% if check['h1'] is not none %}{{ check['h1'] }}{% endif %}</td>
-          <td>{% if check['title'] is not none %}{{ check['title'] }}{% endif %}</td>
-          <td>{% if check['desc'] is not none %}{{ check['desc'] }}{% endif %}</td>
+          <td>{{ check['h1'] }}</td>
+          <td>{{ check['title'] }}</td>
+          <td>{{ check['description'] }} </td>
           <td>{{ check['created_at'] }}</td>
         </tr>
         {% endfor %}

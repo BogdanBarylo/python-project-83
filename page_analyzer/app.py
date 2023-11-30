@@ -1,14 +1,13 @@
-from flask import (Flask, render_template, flash,
-                   request, redirect, url_for, session)
+from flask import Flask, render_template, flash, request, redirect, url_for
 import os
 from dotenv import load_dotenv
 from page_analyzer.validator import validate_url
 from page_analyzer.normalize import get_normalized_url
 import psycopg2
 from psycopg2.extras import DictCursor
-from page_analyzer.time_normalize import get_normalized_time
+from page_analyzer.time_normalize import change_format_time
 import requests
-from page_analyzer.soap import get_parse
+from page_analyzer.soap import get_tags
 
 
 load_dotenv()
@@ -34,7 +33,7 @@ def get_index():
 
 
 @app.post('/urls')
-def get_add_url():
+def add_url():
     url = request.form.get('url')
     errors = validate_url(url)
     if errors:
@@ -44,10 +43,10 @@ def get_add_url():
     normalized_url = get_normalized_url(url)
     with conn.cursor(cursor_factory=DictCursor) as curs:
         curs.execute('SELECT id FROM urls WHERE name = %s', (normalized_url,))
-        url_id = curs.fetchone()
-        if url_id:
+        id = curs.fetchone()
+        if id:
             flash('Страница уже существует', 'warning')
-            return redirect(url_for('get_url', id=url_id['id']))
+            return redirect(url_for('get_url', id=id['id']))
 
         curs.execute('INSERT INTO urls (name) VALUES (%s) RETURNING id',
                      (normalized_url,))
@@ -59,14 +58,22 @@ def get_add_url():
 
 @app.get('/url/<int:id>')
 def get_url(id):
-    checks = session.get('checks')
-    session.clear()
     with conn.cursor(cursor_factory=DictCursor) as curs:
         curs.execute('SELECT name, created_at FROM urls WHERE id = %s', (id,))
         url = curs.fetchone()
     if not url['name'] or not url['created_at']:
         return redirect(url_for('page_not_found'))
-    url['created_at'] = get_normalized_time(url['created_at'])
+    url['created_at'] = change_format_time(url['created_at'])
+    with conn.cursor(cursor_factory=DictCursor) as curs:
+        curs.execute('''SELECT id, created_at,
+                     status_code, h1, title,
+                     description
+                     FROM url_checks
+                     WHERE url_id = %s
+                     ORDER BY id DESC''', (id,))
+        checks = curs.fetchall()
+        for check in checks:
+            check['created_at'] = change_format_time(check['created_at'])
     return render_template('url.html', id=id, checks=checks, **url)
 
 
@@ -84,23 +91,23 @@ def get_all_urls():
                      ORDER BY urls.id DESC''')
         urls = curs.fetchall()
     for url in urls:
-        url['last_checked_at'] = get_normalized_time(url['last_checked_at'])
+        url['last_checked_at'] = change_format_time(url['last_checked_at'])
     return render_template('all_urls.html', urls=urls)
 
 
 @app.post('/urls/<int:id>/checks')
-def get_check_url(id):
+def add_url_check(id):
     with conn.cursor(cursor_factory=DictCursor) as curs:
         curs.execute('SELECT name FROM urls WHERE id = %s', (id,))
         name = curs.fetchone()
-    responce = requests.get(name[0])
-    status_code = responce.status_code
-    if status_code == 500:
-        return redirect(url_for('get_error'))
-    elif status_code == 400:
-        return redirect(url_for('page_not_found'))
-
-    tags_dict = get_parse(responce)
+    response = requests.get(name[0])
+    try:
+        response.raise_for_status()
+    except requests.exceptions.RequestException:
+        flash('Произошла ошибка при проверке', 'error')
+        return redirect(url_for('get_url', id=id))
+    status_code = response.status_code
+    tags_dict = get_tags(response)
 
     with conn.cursor(cursor_factory=DictCursor) as curs:
         curs.execute('''INSERT INTO url_checks
@@ -109,23 +116,5 @@ def get_check_url(id):
                      (id, status_code, tags_dict['h1'],
                       tags_dict['title'], tags_dict['description']))
         curs.connection.commit()
-
-    with conn.cursor(cursor_factory=DictCursor) as curs:
-        curs.execute('''SELECT id, created_at,
-                     status_code, h1, title,
-                     description
-                     FROM url_checks
-                     WHERE url_id = %s''', (id,))
-        checks = curs.fetchall()
-    if not checks:
-        flash('Произошла ошибка при проверке', 'error')
-        return redirect(url_for('get_url', id=id))
-    session['checks'] = [{'id': check['id'],
-                          'created_at': get_normalized_time(
-                              check['created_at']),
-                          'status_code': check['status_code'],
-                          'h1': check['h1'],
-                          'title': check['title'],
-                          'desc': check['description']} for check in checks]
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_url', id=id))

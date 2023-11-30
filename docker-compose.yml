@@ -9,4 +9,4 @@ services:
       POSTGRES_USER: bogdan
       POSTGRES_PASSWORD: pass
     volumes:
-      - ./path/to/your/sql/scripts:/docker-entrypoint-initdb.d
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql
