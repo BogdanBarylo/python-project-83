@@ -28,7 +28,7 @@ def get_parse_title_tag(soup):
 
 def get_parse_content(soup):
     meta_description = soup.find('meta', {'name': 'description'})
-    if not meta_description and 'content' in meta_description.attrs:
+    if not meta_description or 'content' not in meta_description.attrs:
         return ''
     content = meta_description['content']
     return content
