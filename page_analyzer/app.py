@@ -17,7 +17,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 
-
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
