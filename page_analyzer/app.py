@@ -1,5 +1,6 @@
 from flask import Flask, render_template, flash, request, redirect, url_for
 import os
+import psycopg2
 from dotenv import load_dotenv
 from page_analyzer.validator import validate_url
 from page_analyzer.normalize import get_normalized_url
@@ -15,7 +16,8 @@ from page_analyzer.db_methods import (get_id_urls, insert_name_urls,
 load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-
+DATABASE_URL = os.getenv('DATABASE_URL')
+conn = psycopg2.connect(DATABASE_URL)
 
 @app.errorhandler(404)
 def page_not_found(error):
