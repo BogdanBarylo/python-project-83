@@ -50,7 +50,7 @@ def add_url():
     return redirect(url_for('get_url', id=url_id['id']))
 
 
-@app.get('/url/<int:id>')
+@app.get('/url/<id>')
 def get_url(id):
     url = get_name_and_date_urls(id)
     if not url['name'] or not url['created_at']:
@@ -70,7 +70,7 @@ def get_all_urls():
     return render_template('all_urls.html', urls=urls)
 
 
-@app.post('/urls/<int:id>/checks')
+@app.post('/urls/<id>/checks')
 def add_url_check(id):
     name = get_name_urls(id)
     try:
