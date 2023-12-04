@@ -6,15 +6,15 @@ import psycopg2
 
 load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
-conn = psycopg2.connect(DATABASE_URL)
+
 
 
 def open_db(func):
     def wrapper(*args, **kwargs):
-        with conn.cursor(cursor_factory=DictCursor) as curs:
-            result =  func(curs, *args, **kwargs)
-            conn.close() 
-            return result
+        conn = psycopg2.connect(DATABASE_URL)
+        with conn:
+                with conn.cursor(cursor_factory=DictCursor) as curs:
+                    return func(curs, *args, **kwargs)
     return wrapper
 
 
