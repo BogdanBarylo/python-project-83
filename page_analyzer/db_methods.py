@@ -12,7 +12,9 @@ conn = psycopg2.connect(DATABASE_URL)
 def open_db(func):
     def wrapper(*args, **kwargs):
         with conn.cursor(cursor_factory=DictCursor) as curs:
-            return func(curs, *args, **kwargs)
+            result =  func(curs, *args, **kwargs)
+            conn.close() 
+            return result
     return wrapper
 
 
