@@ -17,6 +17,7 @@
         </ul>
       </div>
     </nav>
+  </header>
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
       {% for category, message in messages %}
@@ -36,7 +37,6 @@
       {% endfor %}  
     {% endif %}
   {% endwith %}
-  </header>
   {% block content %}
   {% endblock %}
   <footer class="border-top py-3 mt-5 flex-shrink-0">
