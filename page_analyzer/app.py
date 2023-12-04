@@ -19,6 +19,7 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 DATABASE_URL = os.getenv('DATABASE_URL')
 conn = psycopg2.connect(DATABASE_URL)
 
+
 @app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html'), 404
