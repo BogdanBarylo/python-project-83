@@ -5,8 +5,9 @@
 
 ### View site here:
 
-![Page Analyzer](https://page-analyzer-rrig.onrender.com)
-!(https://cdn2.hexlet.io/derivations/image/original/eyJpZCI6ImI2MTIyN2RlOTgwMDY1NGZmMjU2M2IyNGIzMTA0YWMyLmdpZiIsInN0b3JhZ2UiOiJjYWNoZSJ9?signature=d7e38ccd6085c1197b7b6fa6e3ec1ccefe24d8565fe6d5983ac43e026103b898)
+[Page Analyzer](https://page-analyzer-rrig.onrender.com)
+
+[Here must be Gif](https://cdn2.hexlet.io/derivations/image/original/eyJpZCI6ImI2MTIyN2RlOTgwMDY1NGZmMjU2M2IyNGIzMTA0YWMyLmdpZiIsInN0b3JhZ2UiOiJjYWNoZSJ9?signature=d7e38ccd6085c1197b7b6fa6e3ec1ccefe24d8565fe6d5983ac43e026103b898)
 
 
 ## Usage
