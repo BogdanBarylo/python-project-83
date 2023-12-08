@@ -8,8 +8,7 @@ import requests
 from page_analyzer.soap import get_tags
 from page_analyzer.db import (get_url_id, insert_url,
                               get_url_by_id, get_checks,
-                              get_urls, get_name_urls,
-                              insert_check)
+                              get_urls, insert_check)
 
 
 load_dotenv()
@@ -71,7 +70,7 @@ def get_all_urls():
 
 @app.post('/urls/<int:id>/checks')
 def add_url_check(id):
-    name = get_name_urls(id)
+    name = get_url_by_id(id)
     try:
         response = requests.get(name[0])
         response.raise_for_status()

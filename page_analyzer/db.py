@@ -67,12 +67,6 @@ def get_urls(curs):
 
 
 @open_db
-def get_name_urls(curs, id):
-    curs.execute('SELECT name FROM urls WHERE id = %s', (id,))
-    return curs.fetchone()
-
-
-@open_db
 def insert_check(curs, id, status_code, tags_dict):
     curs.execute('''INSERT INTO url_checks
                  (url_id, status_code, h1, title, description)
