@@ -47,7 +47,7 @@ psql {databasename}
 #### Secret Key
 
 ```bash
-Create a file for environment variables in the page_analyzer .env directory with the following information:
+Create a file for environment variables in the page_analyzer .env directory with the following information
 DATABASE_URL=postgresql://{username}:{password}@{host}:{port}/{databasename}  
 SECRET_KEY='{your secret key}'
 ```
