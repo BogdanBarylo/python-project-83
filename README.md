@@ -9,8 +9,7 @@
 [Page Analyzer](https://page-analyzer-rrig.onrender.com)
 
 [Here you can see how it works](https://cdn2.hexlet.io/derivations/image/original/eyJpZCI6ImI2MTIyN2RlOTgwMDY1NGZmMjU2M2IyNGIzMTA0YWMyLmdpZiIsInN0b3JhZ2UiOiJjYWNoZSJ9?signature=d7e38ccd6085c1197b7b6fa6e3ec1ccefe24d8565fe6d5983ac43e026103b898)
-
-
+ 
 ## Usage
 
 1. Enter a URL in the input field and click "Проверить" button
@@ -24,10 +23,45 @@
 
 - Python: 3.10
 - Poetry: 1.4.0
-- Flask: 3.0
-- gunicorn: 20.1.0
-- `flake8`: 6.0.0
-- `pytest`: 7.3.1
+
+
+#### Repository cloning
+
+git clone git@github.com:BogdanBarylo/python-project-83.git
+cd python-project-83
+
+
+#### Create Database
+
+whoami
+{username}
+sudo -u postgres createuser --createdb {username} 
+createdb {databasename}
+psql {databasename}
+
+
+
+#### Secret Key
+
+Create a file for environment variables in the page_analyzer .env directory with the following information:
+DATABASE_URL=postgresql://{username}:{password}@{host}:{port}/{databasename}  
+SECRET_KEY='{your secret key}'
+
+
+#### Installing dependencies
+
+make install
+
+
+#### Local use
+
+make dev
+
+
+#### Deploy
+
+make build    
+make start
 
 
 ## Contributions
