@@ -36,7 +36,7 @@ def insert_url(curs, url):
 def get_url_by_id(curs, id):
     curs.execute('SELECT name, created_at FROM urls WHERE id = %s', (id,))
     url = curs.fetchone()
-    if url['name'] is None:
+    if url is None:
         return None
     return url
 
@@ -73,4 +73,12 @@ def insert_check(curs, id, status_code, tags_dict):
                  VALUES (%s, %s, %s, %s, %s)''',
                  (id, status_code, tags_dict['h1'],
                   tags_dict['title'], tags_dict['description']))
+    curs.connection.commit()
+    
+
+@open_db
+def del_url(curs, url):
+    curs.execute('DELETE FROM url_checks WHERE url_id = (SELECT id FROM urls WHERE name = %s)', (url,))
+    curs.connection.commit()
+    curs.execute('DELETE FROM urls WHERE name = %s', (url,))
     curs.connection.commit()
