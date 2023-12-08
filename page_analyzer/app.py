@@ -52,8 +52,6 @@ def add_url():
 @app.get('/urls/<int:id>')
 def get_url(id):
     url = get_name_and_date_urls(id)
-    if not url['name'] or not url['created_at']:
-        return redirect(url_for('page_not_found'))
     url['created_at'] = change_format_time(url['created_at'])
     checks = get_checks(id)
     for check in checks:
