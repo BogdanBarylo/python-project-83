@@ -31,26 +31,20 @@ git clone git@github.com:BogdanBarylo/python-project-83.git
 cd python-project-83
 ```
 
-
 #### Create Database
 
-```bash
-whoami
-{username}
-sudo -u postgres createuser --createdb {username} 
-createdb {databasename}
-psql {databasename}
-```
-
+`whoami`
+`{username}`
+`sudo -u postgres createuser --createdb {username}`
+`createdb {databasename}`
+`psql {databasename}`
 
 
 #### Secret Key
 
-```bash
-Create a file for environment variables in the page_analyzer .env directory with the following information:
-DATABASE_URL=postgresql://{username}:{password}@{host}:{port}/{databasename}  
-SECRET_KEY='{your secret key}'
-```
+`Create a file for environment variables in the page_analyzer .env directory with the following information:`
+`DATABASE_URL=postgresql://{username}:{password}@{host}:{port}/{databasename}`
+`SECRET_KEY='{your secret key}'`
 
 
 #### Installing dependencies
@@ -66,11 +60,10 @@ make install
 make dev
 ```
 
-
 #### Deploy
 
 ```bash
-make build    
+make build
 make start
 ```
 
