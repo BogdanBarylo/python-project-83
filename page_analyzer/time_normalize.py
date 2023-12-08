@@ -1,4 +1,4 @@
-def change_format_time(date):
+def datetime_to_str(date):
     if date is None:
         return ''
     only_date = date.date()

@@ -18,13 +18,13 @@ def open_db(func):
 
 
 @open_db
-def get_id_urls(curs, url):
+def get_url_id(curs, url):
     curs.execute('SELECT id FROM urls WHERE name = %s', (url,))
     return curs.fetchone()
 
 
 @open_db
-def insert_name_urls(curs, url):
+def insert_url(curs, url):
     curs.execute('INSERT INTO urls (name) VALUES (%s) RETURNING id',
                  (url,))
     url_id = curs.fetchone()
@@ -33,9 +33,12 @@ def insert_name_urls(curs, url):
 
 
 @open_db
-def get_name_and_date_urls(curs, id):
+def get_url_by_id(curs, id):
     curs.execute('SELECT name, created_at FROM urls WHERE id = %s', (id,))
-    return curs.fetchone()
+    url = curs.fetchone()
+    if url['name'] is None:
+        return None
+    return url
 
 
 @open_db
@@ -50,7 +53,7 @@ def get_checks(curs, id):
 
 
 @open_db
-def get_all_information(curs):
+def get_urls(curs):
     curs.execute('''SELECT urls.id, urls.name,
                      urls.created_at, url_checks.status_code,
                      MAX(url_checks.created_at) AS last_checked_at
@@ -70,7 +73,7 @@ def get_name_urls(curs, id):
 
 
 @open_db
-def insert_check_url_checks(curs, id, status_code, tags_dict):
+def insert_check(curs, id, status_code, tags_dict):
     curs.execute('''INSERT INTO url_checks
                  (url_id, status_code, h1, title, description)
                  VALUES (%s, %s, %s, %s, %s)''',

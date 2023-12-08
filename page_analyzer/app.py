@@ -3,13 +3,13 @@ import os
 from dotenv import load_dotenv
 from page_analyzer.validator import validate_url
 from page_analyzer.normalize import get_normalized_url
-from page_analyzer.time_normalize import change_format_time
+from page_analyzer.time_normalize import datetime_to_str
 import requests
 from page_analyzer.soap import get_tags
-from page_analyzer.db_methods import (get_id_urls, insert_name_urls,
-                                      get_name_and_date_urls, get_checks,
-                                      get_all_information, get_name_urls,
-                                      insert_check_url_checks)
+from page_analyzer.db import (get_url_id, insert_url,
+                              get_url_by_id, get_checks,
+                              get_urls, get_name_urls,
+                              insert_check)
 
 
 load_dotenv()
@@ -40,30 +40,32 @@ def add_url():
         flash(errors[0], 'error')
         return render_template('index.html'), 422
     normalized_url = get_normalized_url(url)
-    id = get_id_urls(normalized_url)
+    id = get_url_id(normalized_url)
     if id:
         flash('Страница уже существует', 'warning')
         return redirect(url_for('get_url', id=id['id']))
-    url_id = insert_name_urls(normalized_url)
+    url_id = insert_url(normalized_url)
     flash('Страница успешно добавлена', 'success')
     return redirect(url_for('get_url', id=url_id['id']))
 
 
 @app.get('/urls/<int:id>')
 def get_url(id):
-    url = get_name_and_date_urls(id)
-    url['created_at'] = change_format_time(url['created_at'])
+    url = get_url_by_id(id)
+    if not url:
+        return render_template('404.html'), 404
+    url['created_at'] = datetime_to_str(url['created_at'])
     checks = get_checks(id)
     for check in checks:
-        check['created_at'] = change_format_time(check['created_at'])
+        check['created_at'] = datetime_to_str(check['created_at'])
     return render_template('url.html', id=id, checks=checks, **url)
 
 
 @app.get('/urls')
 def get_all_urls():
-    urls = get_all_information()
+    urls = get_urls()
     for url in urls:
-        url['last_checked_at'] = change_format_time(url['last_checked_at'])
+        url['last_checked_at'] = datetime_to_str(url['last_checked_at'])
     return render_template('all_urls.html', urls=urls)
 
 
@@ -78,6 +80,6 @@ def add_url_check(id):
         return redirect(url_for('get_url', id=id))
     status_code = response.status_code
     tags_dict = get_tags(response)
-    insert_check_url_checks(id, status_code, tags_dict)
+    insert_check(id, status_code, tags_dict)
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_url', id=id))
