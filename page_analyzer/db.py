@@ -74,11 +74,12 @@ def insert_check(curs, id, status_code, tags_dict):
                  (id, status_code, tags_dict['h1'],
                   tags_dict['title'], tags_dict['description']))
     curs.connection.commit()
-    
+
 
 @open_db
 def del_url(curs, url):
-    curs.execute('DELETE FROM url_checks WHERE url_id = (SELECT id FROM urls WHERE name = %s)', (url,))
+    curs.execute('''DELETE FROM url_checks WHERE url_id =
+                 (SELECT id FROM urls WHERE name = %s)''', (url,))
     curs.connection.commit()
     curs.execute('DELETE FROM urls WHERE name = %s', (url,))
     curs.connection.commit()
