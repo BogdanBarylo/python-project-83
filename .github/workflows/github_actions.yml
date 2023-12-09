@@ -1,18 +1,25 @@
 name: Python CI
-
 on:
   - push
   - pull_request
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: db_analyzer
+          POSTGRES_PASSWORD: bogdan
+          POSTGRES_DB: pass
     steps:
       - uses: actions/checkout@v3
       - name: set up Python 3.10
         uses: actions/setup-python@v3
         with:
-          python-version: '3.10'      
+          python-version: '3.10'
       - name: Install dependencies
         run: |
           pip install poetry
@@ -20,7 +27,11 @@ jobs:
       - name: Run linter 
         run: |
           make lint
-      - name: Test & publish code coverage
+      - name: Run tests
+        run: make test
+      - name: Run tests with coverage
+        run: make test-coverage
+      - name: Publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         if: github.ref_name == 'main'
         env:
