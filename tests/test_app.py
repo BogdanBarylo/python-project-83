@@ -37,7 +37,7 @@ def test_invalid_url(truncate_db, client: FlaskClient):
 
 
 def test_get_existing_url(truncate_db, add_url, client):
-    response = client.get('/urls/'+ add_url)
+    response = client.get('/urls/' + add_url)
     assert response.status_code == 200
     assert re.search(r'Сайт:', response.data.decode())
 
