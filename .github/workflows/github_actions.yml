@@ -27,8 +27,6 @@ jobs:
       - name: Run linter 
         run: |
           make lint
-      - name: Run psql
-        run: make start_psql
       - name: Run tests
         run: make test
       - name: Run tests with coverage
