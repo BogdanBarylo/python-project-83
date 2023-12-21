@@ -24,7 +24,7 @@ shut_down_psql:
 	docker compose down
 
 test-coverage:
-	poetry run pytest --cov=gendiff --cov-report xml
+	poetry run pytest --cov=page_analyzer --cov-report xml
 
 test:
 	poetry run pytest
