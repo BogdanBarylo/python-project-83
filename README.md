@@ -1,6 +1,7 @@
 [![Actions Status](https://github.com/BogdanBarylo/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/BogdanBarylo/python-project-83/actions)
 [![Python CI](https://github.com/BogdanBarylo/python-project-83/actions/workflows/github_actions.yml/badge.svg)](https://github.com/BogdanBarylo/python-project-83/actions/workflows/github_actions.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7b94b15148d150a5a74f/maintainability)](https://codeclimate.com/github/BogdanBarylo/python-project-83/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7b94b15148d150a5a74f/test_coverage)](https://codeclimate.com/github/BogdanBarylo/python-project-83/test_coverage)
 
 ## Page Analyzer is a website that analyzes specified pages for SEO suitability
 
