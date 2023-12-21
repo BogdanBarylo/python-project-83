@@ -2,10 +2,6 @@ from flask.testing import FlaskClient
 import pytest
 import re
 from page_analyzer import app
-# from page_analyzer.db import del_url
-
-
-TEST_URL = 'https://example.com'
 
 
 @pytest.fixture
@@ -15,8 +11,8 @@ def client():
         yield client
 
 
-def test_add_url_success(client: FlaskClient):
-    response = client.post('/urls', data={'url': TEST_URL})
+def test_add_url_success(truncate_db, testing_url, client: FlaskClient):
+    response = client.post('/urls', data={'url': testing_url})
     assert response.status_code == 302
     redirected_response = client.get(response.location, follow_redirects=True)
     assert redirected_response.status_code == 200
@@ -24,8 +20,9 @@ def test_add_url_success(client: FlaskClient):
     assert re.search(flash, redirected_response.data.decode()) is not None
 
 
-def test_add_existing_url(client: FlaskClient):
-    response = client.post('/urls', data={'url': TEST_URL})
+def test_add_existing_url(truncate_db, add_url, testing_url,
+                          client: FlaskClient):
+    response = client.post('/urls', data={'url': testing_url})
     assert response.status_code == 302
     redirected_response = client.get(response.location, follow_redirects=True)
     assert redirected_response.status_code == 200
@@ -33,31 +30,32 @@ def test_add_existing_url(client: FlaskClient):
     assert re.search(flash, redirected_response.data.decode()) is not None
 
 
-def test_invalid_url(client: FlaskClient):
+def test_invalid_url(truncate_db, client: FlaskClient):
     response = client.post('/urls', data={'url': 'invalid-url'})
     assert response.status_code == 422
     assert re.search(r'Некорректный URL', response.data.decode())
 
 
-def test_get_existing_url(client):
-    response = client.get('/urls/1')
+def test_get_existing_url(truncate_db, add_url, client):
+    response = client.get('/urls/'+ add_url)
     assert response.status_code == 200
     assert re.search(r'Сайт:', response.data.decode())
 
 
-def test_get_nonexistent_url(client):
+def test_get_nonexistent_url(truncate_db, client):
     response = client.get('/urls/100')
     assert response.status_code == 404
 
 
-def test_get_all_urls(client):
+def test_get_all_urls(truncate_db, client):
     response = client.get('/urls')
     assert response.status_code == 200
     assert re.search(r'Сайты', response.data.decode())
 
 
-def test_add_check(client):
-    response = client.post('/urls/1/checks', data={'url': TEST_URL})
+def test_add_check(truncate_db, testing_url, add_url, client):
+    response = client.post('/urls/' + add_url + '/checks',
+                           data={'url': testing_url})
     assert response.status_code == 302
     redirected_response = client.get(response.location, follow_redirects=True)
     assert redirected_response.status_code == 200

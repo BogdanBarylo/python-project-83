@@ -77,9 +77,6 @@ def insert_check(curs, id, status_code, tags_dict):
 
 
 @open_db
-def del_url(curs, url):
-    curs.execute('''DELETE FROM url_checks WHERE url_id =
-                 (SELECT id FROM urls WHERE name = %s)''', (url,))
-    curs.connection.commit()
-    curs.execute('DELETE FROM urls WHERE name = %s', (url,))
+def clear_db(curs):
+    curs.execute('TRUNCATE urls, url_checks CASCADE')
     curs.connection.commit()
