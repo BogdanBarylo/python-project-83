@@ -14,8 +14,6 @@ jobs:
           POSTGRES_USER: db_analyzer
           POSTGRES_PASSWORD: bogdan
           POSTGRES_DB: pass
-          DATABASE_URL: postgresql://bogdan:pass@localhost:5432/db_analyzer
-          SECRET_KEY: b7a496a78211385c9971402931bd68c6
     steps:
       - uses: actions/checkout@v3
       - name: set up Python 3.10
@@ -31,6 +29,8 @@ jobs:
           make lint
       - name: Run tests
         run: make test
+        env:
+          DATABASE_URL: postgresql://bogdan:pass@localhost:5432/db_analyzer
       - name: Run tests with coverage
         run: make test-coverage
       - name: Publish code coverage
