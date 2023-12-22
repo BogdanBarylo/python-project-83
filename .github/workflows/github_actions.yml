@@ -2,6 +2,8 @@ name: Python CI
 on:
   - push
   - pull_request
+env:
+    DATABASE_URL: postgresql://bogdan:pass@localhost:5432/db_analyzer
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -29,8 +31,6 @@ jobs:
           make lint
       - name: Run tests
         run: make test
-        env:
-          DATABASE_URL: postgresql://bogdan:pass@localhost:5432/db_analyzer
       - name: Run tests with coverage
         run: make test-coverage
       - name: Publish code coverage
