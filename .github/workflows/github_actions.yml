@@ -4,7 +4,7 @@ on:
   - pull_request
 env:
     DATABASE_URL: postgresql://bogdan:pass@localhost:5432/db_analyzer
-    SECRET_KEY: b7a496a78211385c9971402931bd68c6
+    SECRET_KEY: $SECRET_KEY
 jobs:
   build:
     runs-on: ubuntu-latest
