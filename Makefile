@@ -25,6 +25,3 @@ shut_down_psql:
 
 test-coverage:
 	poetry run pytest --cov=page_analyzer --cov-report xml
-
-test:
-	poetry run pytest
