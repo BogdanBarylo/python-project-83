@@ -2,10 +2,9 @@ from flask import Flask, render_template, flash, request, redirect, url_for
 import os
 from dotenv import load_dotenv
 from page_analyzer.validator import validate_url
-from page_analyzer.normalize import get_normalized_url
-from page_analyzer.time_normalize import datetime_to_str
+from page_analyzer.normalize import get_normalized_url, datetime_to_str
 import requests
-from page_analyzer.soap import get_tags
+from page_analyzer.parse_head import get_tags
 from page_analyzer.db import (get_url_id, insert_url,
                               get_url_by_id, get_checks,
                               get_urls, insert_check)

@@ -54,16 +54,27 @@ def get_checks(curs, id):
 
 @open_db
 def get_urls(curs):
-    curs.execute('''SELECT urls.id, urls.name,
-                     urls.created_at, url_checks.status_code,
-                     MAX(url_checks.created_at) AS last_checked_at
-                     FROM urls
-                     LEFT JOIN url_checks
-                     ON urls.id = url_checks.url_id
-                     GROUP BY urls.id, urls.name, urls.created_at,
-                     url_checks.status_code
-                     ORDER BY urls.id DESC''')
-    return curs.fetchall()
+    curs.execute('''SELECT id, name, created_at FROM urls ORDER BY id DESC''')
+    urls_data = curs.fetchall()
+    urls_with_last_checked = []
+    for url_info in urls_data:
+        url_id, name, created_at = url_info
+        curs.execute('''SELECT status_code, created_at AS last_checked_at
+                        FROM url_checks
+                        WHERE url_id = %s
+                        ORDER BY created_at DESC
+                        LIMIT 1''', (url_id,))
+        last_checked_info = curs.fetchone()
+        status_code = last_checked_info[0] if last_checked_info else None
+        last_checked_at = last_checked_info[1] if last_checked_info else None
+        urls_with_last_checked.append({
+            'id': url_id,
+            'name': name,
+            'created_at': created_at,
+            'status_code': status_code,
+            'last_checked_at': last_checked_at
+        })
+    return urls_with_last_checked
 
 
 @open_db
