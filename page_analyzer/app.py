@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from page_analyzer.validator import validate_url
 from page_analyzer.normalize import get_normalized_url, datetime_to_str
 import requests
-from page_analyzer.parse_head import get_tags
+from page_analyzer.html import get_tags
 from page_analyzer.db import (get_url_id, insert_url,
                               get_url_by_id, get_checks,
                               get_urls, insert_check)
@@ -77,7 +77,7 @@ def add_url_check(id):
         flash('Произошла ошибка при проверке', 'error')
         return redirect(url_for('get_url', id=id))
     status_code = response.status_code
-    tags_dict = get_tags(response)
+    tags_dict = get_tags(response.text)
     insert_check(id, status_code, tags_dict)
     flash('Страница успешно проверена', 'success')
     return redirect(url_for('get_url', id=id))

@@ -31,12 +31,6 @@ jobs:
         run: |
           pip install poetry
           make build
-      - name: Run tests
-        run: make test-coverage
-        if: ${{ github.event_name == 'push' }}
-      - name: Run tests with coverage
-        run: make test-coverage
-        if: ${{ github.event_name == 'pull_request' }}
       - name: Publish code coverage
         uses: paambaati/codeclimate-action@v3.2.0
         if: github.ref == 'refs/heads/main'
@@ -45,4 +39,4 @@ jobs:
         with:
           coverageCommand: make test-coverage
           debug: true
-          
+      

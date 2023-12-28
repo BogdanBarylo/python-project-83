@@ -2,8 +2,7 @@ from bs4 import BeautifulSoup
 
 
 def get_tags(response):
-    html_content = response.text
-    soup = BeautifulSoup(html_content, 'html.parser')
+    soup = BeautifulSoup(response, 'html.parser')
     soup_dict = {'h1': get_parse_h1(soup),
                  'title': get_parse_title_tag(soup),
                  'description': get_parse_content(soup)}
