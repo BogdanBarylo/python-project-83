@@ -19,4 +19,4 @@ jobs:
         run: docker build --platform linux/amd64 -t ${{ secrets.DOCKERHUB_USERNAME }}/page_analyzer:latest .
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/page_analyzer::latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/page_analyzer:latest
